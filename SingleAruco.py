@@ -62,7 +62,7 @@ def connectMyCopter():
 	if not connection_string:
             connection_string='/dev/ttyUSB0'
 
-	vehicle = connect(connection_string,baud=921600,wait_ready=True)
+	vehicle = connect(connection_string,baud=921600,wait_ready=True)			#Print text message via Mavlink to Cube Orange/Mission Planner "Precision Landing activated"
 
 	return vehicle
 
@@ -213,13 +213,13 @@ if script_mode ==1:
     #send_local_ned_velocity(velocity,velocity,0) ##Offset drone from target
     time.sleep(1)
     ready_to_land=1    
-elif script_mode==2:                                                                   ##Add a line where the script reads if the drone is at the last waypoint/landing then precland activates
-    while vehicle.mode!='GUIDED':
+elif script_mode==2:                                                                   ##Add a line where the script reads if the drone is at the last waypoint/landing then precland activates(for AUTO mode)
+    while vehicle.mode!='GUIDED':						       ##script mode 3 for auto mission?
         time.sleep(1)
         print("Waiting for manual change from mode "+str(vehicle.mode)+" to GUIDED")
     ready_to_land=1
 
-if ready_to_land==1:
+if ready_to_land==1:									##Add a text message to cube orange/mission planner that says "Precland is running"
     while vehicle.armed==True:
         lander()
     end_time=time.time()
