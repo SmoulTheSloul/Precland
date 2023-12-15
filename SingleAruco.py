@@ -4,6 +4,8 @@ import socket
 import exceptions
 import math
 import argparse
+import RPi.GPIO as GPIO
+
 
 from dronekit import connect, VehicleMode,LocationGlobalRelative,APIException
 from pymavlink import mavutil
@@ -15,10 +17,18 @@ import numpy as np
 from imutils.video import WebcamVideoStream
 import imutils
 #######VARIABLES####################
-##Aruco
+
+#LED
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17,GPIO.OUT) 				  #YELLOW LED TO CHECK IF THE SCRIPT IS RUNNING
+GPIO.setup(27,GPIO.OUT)  				  #GREEN LED TO CHECK IF ITS CONNECTED
+
+GPIO.output(17,True)    				  #YELLOW LED TURNS ON WHEN THE SCRIPT IS ACTIVATED
+
+##Aruco                
 id_to_find = 72
 marker_size = 20.5 #cm
-takeoff_height = 8
+takeoff_height = 8                                       #takeoff_height is only relevant with script mode 1
 velocity = .5
 
 aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_ARUCO_ORIGINAL)
@@ -45,7 +55,7 @@ notfound_count=0
 first_run=0 #Used to set initial time of function to determine FPS
 start_time=0
 end_time=0
-script_mode = 2 ##1 for arm and takeoff, 2 for manual LOITER to GUIDED land 
+script_mode = 2 ##1 for arm and takeoff, 2 for manual LOITER to GUIDED land 				#Need another script mode for AUTO mode, maybe ask the code to read mode and see if its AUTO?
 ready_to_land=0 ##1 to trigger landing
 
 manualArm=True ##If True, arming from RC controller, If False, arming from this script. 
@@ -63,7 +73,8 @@ def connectMyCopter():
             connection_string='/dev/ttyUSB0'
 
 	vehicle = connect(connection_string,baud=921600,wait_ready=True)			#Print text message via Mavlink to Cube Orange/Mission Planner "Precision Landing activated"
-
+	GPIO.output(27,True)									#GREEN LED TURNS ON AFTER CONNECTION IS ESTABLISHED
+												
 	return vehicle
 
 def arm_and_takeoff(targetHeight):
@@ -221,7 +232,7 @@ elif script_mode==2:                                                            
 
 if ready_to_land==1:									##Add a text message to cube orange/mission planner that says "Precland is running"
     while vehicle.armed==True:
-        lander()
+        lander()									##Function Lander is activated, Precland begins
     end_time=time.time()
     total_time=end_time-start_time
     total_time=abs(int(total_time))
