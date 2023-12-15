@@ -153,9 +153,9 @@ def lander():
     ids=''
     corners, ids, rejected = aruco.detectMarkers(image=gray_img,dictionary=aruco_dict,parameters=parameters)
     if vehicle.mode!='LAND':
-        vehicle.mode=VehicleMode("LAND")
+        vehicle.mode=VehicleMode("LAND")							##Another Mavlink message to MissionPlanner "Landing on Aruco [ID]"
         while vehicle.mode!='LAND':
-            print('WAITING FOR DRONE TO ENTER LAND MODE')
+            print('WAITING FOR DRONE TO ENTER LAND MODE')                                
             time.sleep(1)
     try:
         if ids is not None and ids[0] == id_to_find:
@@ -207,9 +207,9 @@ def lander():
 #######################MAIN###########################
 
 ######################################################
-                                                                                      ##Yellow LED lights up signaling the script is running
+                                                                                      
 vehicle = connectMyCopter()
-                                                                                      ##Green LED lights up signaling the script is connected to FC
+                                                                                      
 ##
 ##SETUP PARAMETERS TO ENABLE PRECISION LANDING
 ##
