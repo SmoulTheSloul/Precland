@@ -225,9 +225,9 @@ if script_mode ==1:
     time.sleep(1)
     ready_to_land=1    
 elif script_mode==2:                                                                   ##Add a line where the script reads if the drone is at the last waypoint/landing then precland activates(for AUTO mode)
-    while vehicle.mode!='GUIDED':						       ##script mode 3 for auto mission?
+    while vehicle.mode!='POSHOLD':						       ##script mode 3 for auto mission?
         time.sleep(1)
-        print("Waiting for manual change from mode "+str(vehicle.mode)+" to GUIDED")
+        print("Waiting for manual change from mode "+str(vehicle.mode)+" to POSHOLD")
     ready_to_land=1
 
 if ready_to_land==1:									##Add a text message to cube orange/mission planner that says "Precland is running"
